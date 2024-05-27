@@ -14,11 +14,21 @@ do $system.OBJ.ImportDir(path,"*.xml","ck",.error,1)
 ## Run the code
 ```
 ; create events and subscriber jobs
-do ##class(IAT.S05.PubSub.Example.Main).Setup()
+do ##class(IAT.PubSub.Example.Main).Setup()
 ; send some messages to channels
-do ##class(IAT.S05.PubSub.Example.Main).Run()
+do ##class(IAT.PubSub.Example.Main).Run()
 ; show log
 zwrite ^PubSub.Log
+hang 10
+zwrite ^PubSub.Log
+hang 10
+zwrite ^PubSub.Log
+; stop demo
+hang 10
+do ##class(IAT.PubSub.Manager).TerminateAll()
+; show log
+zwrite ^PubSub.Log
+;  
 ```
 
 ## Implementation
@@ -51,7 +61,40 @@ There are several points of this example that can be discussed as an exercise:
 * In *IAT.PubSub.Publisher:Send()* method, it simply creates a message header, save it to queue and send a signal to one of the subscribers.
 * It would be interesting allowing more than one type of subscriber per channel. In this case, the *Send()* method should create several message headers and signal the different types of configured subscribers.
 
-# Developer Community
+## Developer Community
 Have a look at [InterSystems Developer Community](https://community.intersystems.com/) to learn about InterSystems technology, sharing solutions and staying up-to-date on the latest developments.
 
 This example was published in https://community.intersystems.com/post/simple-systemevent-examples
+
+## Docker    
+Container build and start runs ALL installation steps.    
+It is immedeatly ready for use as described    
+
+### Prerequisites
+Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
+### Installation
+Clone/git pull the repo into any local directory
+```
+$ git clone https://github.com/rcemper/PR_iat-pubsub.git
+```
+```
+$ docker compose up -d && docker compose logs -f
+```
+Quick REST access to MASTER:   
+http://localhost:42773/synchmaster/rest/v1/customers   
+
+Quick REST access to CLIENT:    
+http://localhost:42773/synchclient/rest/v1/employees   
+
+
+To open IRIS Terminal do:   
+```
+$ docker-compose exec iris iris session iris 
+USER>
+```
+or using **WebTerminal**     
+http://localhost:42773/terminal/      
+
+To access IRIS System Management Portal   
+http://localhost:42773/csp/sys/UtilHome.csp    
+
